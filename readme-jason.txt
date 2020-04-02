@@ -16,7 +16,6 @@ topic_change_keepalive client/change/keepalive
 #打开下面两个配置项“topic_notice_online”（对应上线消息）和“topic_notice_offline”（对应下线消息），
 #并为他们分别设置一个参数，这个设置的参数将被作为一个topic，也可以将这两个topic参数设置成一样，这样，上下线消息都会发送到同一个topic上；
 #在有连接建立或断开时mosquitto将向这两个topic发送消息，
-#【注意】建议这两个参数设置为"$SYS/"开头的字符串topic，这样得到的数据会更安全，因为$SYS/开头的topic只能mosquitto内部发布；
 #【消息格式说明】mosquitto向下面这两个配置topic发送的上下线消息为JSON字符串，共包含三个字段：
 #clientid：当前通知所涉及的连接ID；
 #type:连接的状态：1：连接建立；0：连接断开；
@@ -27,14 +26,15 @@ topic_change_keepalive client/change/keepalive
 #	"type","1",
 #	"time",""
 #}
-topic_notice_online $SYS/NOTICE/STATUS/ONLINE
-topic_notice_offline $SYS/NOTICE/STATUS/OFFLINE
+topic_notice_online NOTICE/STATUS/ONLINE
+topic_notice_offlineNOTICE/STATUS/OFFLINE
 
 #新增功能3：
 #【功能说明】导出在线连接的id和ip到目录：/tmp/online_users
 #【使用说明】开启配置参数"topic_dump_connection"和"cmd_dump_connection"，为这两个参数各设置一个字符串，其中：
 #参数topic_dump_connection指定了一个topic，参数cmd_dump_connection指定了一个“命令”，只有向这里配置的topic发送配置的命令
 #mosquitto才会执行此功能，不配置topic_dump_connection就意味着不启动该功能，一旦启用该功能就必须要同时提供对参数cmd_dump_connection的配置。
+导出文件的位置为：/tmp/online_users/online_users_{端口号}_{时间}.txt
 #【注意】
 #[1] 这里定义的topic 不能 以$SYS/开头，否则客户端就无法向这个topic发送命令了;
 #[2] 建议这个topic要比较特殊，尽量短，这样效率更高，最好第一个字符跟其他的所有topic都不一样;
