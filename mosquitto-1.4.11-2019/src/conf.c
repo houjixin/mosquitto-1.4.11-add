@@ -172,6 +172,7 @@ static void _config_init_reload(struct mqtt3_config *config)
 	if(config->topic_dump_conn_info) _mosquitto_free(config->topic_dump_conn_info);
 	if(config->cmd_dump_conn) _mosquitto_free(config->cmd_dump_conn);	
 	if(config->topic_query_conn_status) _mosquitto_free(config->topic_query_conn_status);
+	if(config->topic_close_conn) _mosquitto_free(config->topic_close_conn);
 }
 
 void mqtt3_config_init(struct mqtt3_config *config)
@@ -219,6 +220,7 @@ void mqtt3_config_init(struct mqtt3_config *config)
 	config->topic_dump_conn_info = NULL;
 	config->cmd_dump_conn = NULL;
 	config->topic_query_conn_status = NULL;
+	config->topic_close_conn = NULL;
 }
 
 void mqtt3_config_cleanup(struct mqtt3_config *config)
@@ -325,6 +327,7 @@ void mqtt3_config_cleanup(struct mqtt3_config *config)
 	if(config->topic_dump_conn_info) _mosquitto_free(config->topic_dump_conn_info);
 	if(config->cmd_dump_conn) _mosquitto_free(config->cmd_dump_conn);	
 	if(config->topic_query_conn_status) _mosquitto_free(config->topic_query_conn_status);	
+	if(config->topic_close_conn) _mosquitto_free(config->topic_close_conn);	
 }
 
 static void print_usage(void)
@@ -1762,6 +1765,8 @@ int _config_read_file_core(struct mqtt3_config *config, bool reload, const char 
 					_mosquitto_log_printf(NULL, MOSQ_LOG_WARNING, "Warning: Unsupported rsmb configuration option \"%s\".", token);
 				}else if(!strcmp(token, "topic_change_keepalive")){
 					if(_conf_parse_string(&token, "topic_change_keepalive", &config->topic_change_keepalive, saveptr)) return MOSQ_ERR_INVAL;
+				}else if(!strcmp(token, "topic_close_conn")){
+					if(_conf_parse_string(&token, "topic_close_conn", &config->topic_close_conn, saveptr)) return MOSQ_ERR_INVAL;
 				}else if(!strcmp(token, "topic_query_conn_status")){
 					if(_conf_parse_string(&token, "topic_query_conn_status", &config->topic_query_conn_status, saveptr)) return MOSQ_ERR_INVAL;
 				}else if(!strcmp(token, "topic_notice_online")){
