@@ -49,3 +49,9 @@ cmd_dump_connection hello-jason
 #【使用方式】开启下面配置，该配置将指定一个topic，任何一个客户端只要向这个topic发布一个连接ID（即pub过来的消息内容就是要查询的连接ID），mosquitto
 #就会给这个当前pub消息的客户端回复一条消息，查询的客户端无需订阅任何topic，只要向这里配置的topic发布连接ID，就能收到mosquitto发布过来的查询结果。
 topic_query_conn_status client/query/connection
+
+#新增功能5：
+#【功能说明】关闭指定连接ID（即MQTT CONNECT报文中的连接ID）的连接；
+#【使用方式】开启下面配置，客户端向该配置指定的topic发布一个连接ID和操作者标识，mosquitto
+#就会关闭该连接ID对应的socket。
+topic_close_conn client/connection/close
