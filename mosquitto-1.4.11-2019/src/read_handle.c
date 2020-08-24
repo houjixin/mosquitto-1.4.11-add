@@ -210,9 +210,28 @@ int mqtt3_handle_publish(struct mosquitto_db *db, struct mosquitto *context)
 	}
 
 
+    if(db->config->topic_close_conn && !strcmp(topic, db->config->topic_close_conn)){
+        /**
+        * new function: close connection 
+        *by jason,2020.08
+        */
+        struct mosquitto *found_context;
+		HASH_FIND(hh_id, db->contexts_by_id, payload, strlen(payload), found_context);
+		
+		if(found_context && (found_context->sock != INVALID_SOCKET)){
+			do_disconnect(db, found_context);
+			_mosquitto_log_printf(NULL, MOSQ_LOG_INFO, "[close connection] connection(id:%s)has been closed!", payload);
+		}
+    }
+
+
 	if(db->config->topic_query_conn_status && !strcmp(topic, db->config->topic_query_conn_status)){
+	/**
+    * new function: query connection status 
+    *by jason,
+    */
 		struct mosquitto *found_context;
-		int conn_status = NOTICE_TYPE_OFFLINE;//1:connected，0：disconnected;
+		int conn_status = NOTICE_TYPE_OFFLINE;//1:connected�?：disconnected;
 		HASH_FIND(hh_id, db->contexts_by_id, payload, strlen(payload), found_context);
 		
 		if(found_context && (found_context->sock != INVALID_SOCKET)){
